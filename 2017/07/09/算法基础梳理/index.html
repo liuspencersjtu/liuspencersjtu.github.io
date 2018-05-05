@@ -10,7 +10,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" >
     <meta name="description" content="个人的一个小站，目前还在建设中">
-    <title>算法基础梳理 · Spencer&#39;s Studio</title>
+    <title>Leetcode 33.Search in Rotated Sorted Array · Spencer&#39;s Studio</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -191,7 +191,7 @@
                 <a href="/" >Spencer&#39;s Studio.</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">算法基础梳理</a>
+                <a href="#" class="post-name">Leetcode 33.Search in Rotated Sorted Array</a>
             </div>
     </div>
     
@@ -216,14 +216,14 @@ height:50vh;
     
     <!-- 404页  -->
             
-    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/Scan_01.jpg)"></div>
     <div class="site-intro-placeholder"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            算法基础梳理
+            Leetcode 33.Search in Rotated Sorted Array
             <!-- 404 -->
             
         </h1>
@@ -238,6 +238,14 @@ height:50vh;
         <!-- 文章页meta -->
         
             <!-- 文章页标签  -->
+            
+                <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Algorithms">Algorithms</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "LeetCode">LeetCode</a>
+    
+</div>
             
             <div class="post-intro-meta">
                 <span class="post-intro-calander iconfont-archer">&#xe676;</span>
@@ -347,7 +355,25 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        
+        <blockquote>
+<p>Suppose an array sorted in ascending order is rotated at some pivot unknown to you beforehand.</p>
+<p>(i.e., [0,1,2,4,5,6,7] might become [4,5,6,7,0,1,2]).</p>
+<p>You are given a target value to search. If found in the array return its index, otherwise return -1.</p>
+<p>You may assume no duplicate exists in the array.</p>
+<p>Your algorithm’s runtime complexity must be in the order of O(log n).</p>
+</blockquote>
+<p>Leetcode上二分搜索的一道题目，解决思路关键是怎样判定目标是落在左边还是右边。一种简单的思想方法是分类讨论。因为给出的nums是由一个由大到小排好序的list从中间断开后，将后一半移到前端构成，所以nums的构成可以看成两段连续增长的序列，而第一段序列的末尾与第二段序列的开头断开不连续，并且在最开始的时候，左手的值nums[0]必然大于右手的值nums[len(nums)-1]。随着继续不断的二分，有可能出现两种情况：</p>
+<ul>
+<li>left和right分别落在两段连续增长的区间上</li>
+<li>left和right落在同一段连续增长的区间上<br>如果是第二种情况，之后的二分搜索就和在排好序的list上进行搜索的逻辑完全一样了。如果是第一种情况，再接着进行分类讨论，讨论的标准可以分为：</li>
+<li>中间值mid落在第一段连续增长序列上</li>
+<li>中间值mid落在第二段连续增长序列上<br>如果是第一种情况，如果target大于等于nums[left]小于nums[mid]，则落在左侧二分区间，否则落在右侧区间；如果是第二种情况，如果target大于nums[mid]，小于等于nums[right]，则落在右侧区间，否则落在左侧区间。比较的时候抓住左右两侧必然有一段是连续增长区间这一个点即可。<br>按照这一思路具体实现如下：</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">search</span><span class="params">(self, nums, target)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        :type nums: List[int]</div><div class="line">        :type target: int</div><div class="line">        :rtype: int</div><div class="line">        """</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> nums:</div><div class="line">            <span class="keyword">return</span> <span class="number">-1</span></div><div class="line">        </div><div class="line">        left = <span class="number">0</span></div><div class="line">        right = len(nums)<span class="number">-1</span></div><div class="line"></div><div class="line">        <span class="keyword">while</span> left&lt;=right:</div><div class="line">            mid = (left+right)//<span class="number">2</span></div><div class="line">            <span class="keyword">if</span> nums[mid] == target:</div><div class="line">                <span class="keyword">return</span> mid</div><div class="line">            </div><div class="line">            <span class="keyword">if</span> nums[left]&lt;nums[right]:</div><div class="line">                <span class="keyword">if</span> nums[mid]&gt;target:</div><div class="line">                    right = mid<span class="number">-1</span></div><div class="line">                <span class="keyword">else</span>:</div><div class="line">                    left = mid+<span class="number">1</span></div><div class="line">            <span class="keyword">else</span>:</div><div class="line">                <span class="keyword">if</span> nums[mid]&gt;=nums[left]:</div><div class="line">                    <span class="keyword">if</span> target&gt;=nums[left] <span class="keyword">and</span> target&lt;nums[mid]:</div><div class="line">                        right = mid<span class="number">-1</span></div><div class="line">                    <span class="keyword">else</span>:</div><div class="line">                        left = mid+<span class="number">1</span></div><div class="line">                <span class="keyword">else</span>:</div><div class="line">                    <span class="keyword">if</span> target&gt;nums[mid] <span class="keyword">and</span> target&lt;=nums[right]:</div><div class="line">                        left = mid+<span class="number">1</span></div><div class="line">                    <span class="keyword">else</span>:</div><div class="line">                        right = mid<span class="number">-1</span></div><div class="line">         </div><div class="line">        <span class="comment"># left&gt;right</span></div><div class="line">        <span class="keyword">return</span> <span class="number">-1</span></div></pre></td></tr></table></figure>
+<p>leetcode提交运行时间为37ms。</p>
+<p>然后继续看一下怎么对这一对代码进行优化，既然我们第二段的讨论抓住的核心是<strong>左右两段必然有一段是连续增长序列</strong>，那么第一段讨论给出的条件<em>整个区间连续增长</em>也符合第二段讨论的这一标准，那么我们就可以删掉第一段讨论。实现如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># written by id:Google@LeetCode</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></div><div class="line">    <span class="comment"># @param &#123;integer[]&#125; numss</span></div><div class="line">    <span class="comment"># @param &#123;integer&#125; target</span></div><div class="line">    <span class="comment"># @return &#123;integer&#125;</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">search</span><span class="params">(self, nums, target)</span>:</span></div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> nums:</div><div class="line">            <span class="keyword">return</span> <span class="number">-1</span></div><div class="line"></div><div class="line">        low, high = <span class="number">0</span>, len(nums) - <span class="number">1</span></div><div class="line"></div><div class="line">        <span class="keyword">while</span> low &lt;= high:</div><div class="line">            mid = (low + high) / <span class="number">2</span></div><div class="line">            <span class="keyword">if</span> target == nums[mid]:</div><div class="line">                <span class="keyword">return</span> mid</div><div class="line"></div><div class="line">            <span class="keyword">if</span> nums[low] &lt;= nums[mid]:</div><div class="line">                <span class="keyword">if</span> nums[low] &lt;= target &lt;= nums[mid]:</div><div class="line">                    high = mid - <span class="number">1</span></div><div class="line">                <span class="keyword">else</span>:</div><div class="line">                    low = mid + <span class="number">1</span></div><div class="line">            <span class="keyword">else</span>:</div><div class="line">                <span class="keyword">if</span> nums[mid] &lt;= target &lt;= nums[high]:</div><div class="line">                    low = mid + <span class="number">1</span></div><div class="line">                <span class="keyword">else</span>:</div><div class="line">                    high = mid - <span class="number">1</span></div><div class="line"></div><div class="line">        <span class="keyword">return</span> <span class="number">-1</span></div></pre></td></tr></table></figure></p>
+<p>提交运行时间是48ms。<br>总的来说，二分搜索这一类问题有点像小时候做的一类数学应用题，需要的技巧型通常不是很多，重要的是抓住核心条件分类讨论target是落在左区间还是右区间即可，更多的还要看解题者的耐心和细心了。</p>
+
     </article>
     <!-- 前后页  -->
     <ul class="post-paginator">
@@ -399,18 +425,15 @@ height:50vh;
         
     
         
+    
+        
+    
+        
+    
+        
             
-                <span class="iconfont-archer wechat" title=wechat>
-                  
-                  <img class="profile-qr" src="/assets/example_qr.png" />
-                </span>
+                <a href="//www.zhihu.com/people/liu-rong-rong-56-98/activities" class="iconfont-archer zhihu" target="_blank" title=zhihu></a>
             
-        
-    
-        
-    
-        
-    
         
     
         
@@ -513,6 +536,8 @@ top:50vh;
     
     
     
+    
+    
     <div class="total-archive"> Total : 4 </div>
     
     <div class="post-archive">
@@ -525,7 +550,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2017/07/09/算法基础梳理/" >算法基础梳理</a>
+            <span class="archive-post-date">07/09</span><a class="archive-post-title" href= "/2017/07/09/算法基础梳理/" >Leetcode 33.Search in Rotated Sorted Array</a>
         </li>
     
     
@@ -547,6 +572,10 @@ top:50vh;
   </div>
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Algorithms"><span class="iconfont-archer">&#xe606;</span>Algorithms</span>
+    
+        <span class="sidebar-tag-name" data-tags="LeetCode"><span class="iconfont-archer">&#xe606;</span>LeetCode</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
