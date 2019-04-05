@@ -10,7 +10,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" >
     <meta name="description" content="个人的一个小站，目前还在建设中">
-    <title>我的大学 · Spencer&#39;s Studio</title>
+    <title>LeetCode 995. Minimum Number of K Consecutive Bit Flips · Spencer&#39;s Studio</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -65,6 +65,8 @@
 
     <link rel="preload" href= /css/style.css?v=20180317 as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="stylesheet" type="text/css" href= /css/mobile.css?v=20180317 media="(max-width: 980px)"/>
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         
     <link rel="icon" href= /assets/favicon.ico>
     <script>
@@ -175,12 +177,23 @@
 </head>
 
     
+        <body class="post-body">
+    
     
 <header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
     <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Spencer&#39;s Studio.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">LeetCode 995. Minimum Number of K Consecutive Bit Flips</a>
+            </div>
+    </div>
     
     <a class="home-link" href=/>Spencer's Studio.</a>
 </header>
@@ -194,24 +207,61 @@
 
 
 
+height:50vh;
+
 >
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
     <div class="site-intro-placeholder"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
             
+            LeetCode 995. Minimum Number of K Consecutive Bit Flips
+            <!-- 404 -->
+            
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <!-- 文章页标签  -->
+            
+            <div class="post-intro-meta">
+                <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                <span class="post-intro-time">2019/04/04</span>
+                
+                <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                    <span class="iconfont-archer">&#xe602;</span>
+                    <span id="busuanzi_value_page_pv"></span>
+                </span>
+                
+                <span class="shareWrapper">
+                    <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                    <span class="shareText">Share</span>
+                    <ul class="shareList">
+                        <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                            <div class="share-qrcode"></div>
+                        </li>
+                        <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                        <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                        <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                        <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                    </ul>
+                </span>
+            </div>
         
     </div>
 </div>
@@ -297,7 +347,26 @@
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        
+        <blockquote>
+<p>In an array A containing only 0s and 1s, a K-bit flip consists of choosing a (contiguous) subarray of length K and simultaneously changing every 0 in the subarray to 1, and every 1 in the subarray to 0.<br>Return the minimum number of K-bit flips required so that there is no 0 in the array.  If it is not possible, return -1.</p>
+</blockquote>
+<p>Example 1:</p>
+<blockquote>
+<p>Input: A = [0,1,0], K = 1<br>Output: 2<br>Explanation: Flip A[0], then flip A[2].</p>
+</blockquote>
+<p>Example 2:</p>
+<blockquote>
+<p>Input: A = [1,1,0], K = 2<br>Output: -1<br>Explanation: No matter how we flip subarrays of size 2, we can’t make the array become [1,1,1].</p>
+</blockquote>
+<p>Example 3:</p>
+<blockquote>
+<p>Input: A = [0,0,0,1,0,1,1,0], K = 3<br>Output: 3<br>Explanation:<br>Flip A[0],A[1],A[2]: A becomes [1,1,1,1,0,1,1,0]<br>Flip A[4],A[5],A[6]: A becomes [1,1,1,1,1,0,0,0]<br>Flip A[5],A[6],A[7]: A becomes [1,1,1,1,1,1,1,1]</p>
+</blockquote>
+<p>一道leetcode上hard tag的题目， 难度准确来说大概算是medium和hard中间吧。从解题思路来看，首先要看出来这是一个贪心选择的问题：当我们从左到右进行翻转操作的时候，如果当前位置是0，则就一定要立刻翻转，因为在此之后，后面的翻转操作就没有办法影响到这个bit了。如果我们当前bit为0，而之后bit的数量已经小于K，则说明没有办法将整个数列翻转为全1数列。基于这个思路，我们就首先有了一种brutal force的解法，即每次遇到0，就将这一位开始之后的K个比特就进行翻转，完成之后向后移一位继续重复操作。这样我们遍历了整个数列，而在每一位上可能的操作时间复杂度都为O(K)，于是整个解法的时间复杂度就变成了O(KN)，经过测试使用python3会出现超时的情况（而据说C++可以accept）。</p>
+<p>而我们换一个角度重新思考一下这个题目，既然每个翻转操作会影响到其后连自身一共K个bit，那么换言之，每个bit亦只会被其之前的K-1个bit所影响，从这个角度来说，我们就可以尝试使用滑动窗的思路来解决这个问题。我们定义一个变量flipped来存储前K-1位上所有的翻转操作带来的最终影响，而用另一个数组isFlipped[N]来记录在位置i处是否进行了翻转，每次滑动之后将flipped和isFlipped[i-K]进行按位异或的操作（和0异或两次与和1异或两次结果都为原始输入）从而抵消当前位置前第K个bit（即刚刚出滑动窗的bit）对flipped的影响。如果当前bit和flipped都为0，则需要进行翻转。如果当前bit和flipped都恰好为1，则说明之前的操作会将当前bit从1翻转为0，我们还是需要对当前bit进行翻转操作。</p>
+<p>按照这样的思路，我们可以给出代码实现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">class Solution:</span><br><span class="line">    def minKBitFlips(self, A: List[int], K: int) -&gt; int:</span><br><span class="line">        N = len(A)</span><br><span class="line">        # use flipped to denote whether this bit is flipped</span><br><span class="line">        flipped = 0</span><br><span class="line">        res = 0</span><br><span class="line">        isFlipped = [0]*N</span><br><span class="line">        for i in range(N):</span><br><span class="line">            if i&gt;=K:</span><br><span class="line">                # we maintain a sliding window. when we shift a position, we will compensate the effect of position i - K</span><br><span class="line">                flipped ^= isFlipped[i-K]</span><br><span class="line">            if flipped == A[i]:</span><br><span class="line">                # start flip!</span><br><span class="line">                if i+K-1&gt;=N:</span><br><span class="line">                    return -1</span><br><span class="line">                isFlipped[i] = 1</span><br><span class="line">                flipped ^= 1</span><br><span class="line">                res += 1</span><br><span class="line">        return res</span><br></pre></td></tr></table></figure></p>
+<p>这样时间复杂度为O(n)，空间复杂度也为O(n)。运行时间132ms。</p>
+
     </article>
     <!-- 前后页  -->
     <ul class="post-paginator">
@@ -305,6 +374,11 @@
             
         </li>
         <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2017/07/09/Leetcode 33.Search in Rotated Sorted Array/" title= Leetcode 33.Search in Rotated Sorted Array >
+                    <div class="prevTitle">Leetcode 33.Search in Rotated Sorted Array</div>
+                </a>
             
         </li>
     </ul>
@@ -390,6 +464,24 @@
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        
+    </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
@@ -510,6 +602,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
     
     </body>
 </html>
